@@ -1,0 +1,4 @@
+cd OneDrive\Desktop\statsbomb-streamlit
+
+
+git add -A && git commit -m "..." && git push
