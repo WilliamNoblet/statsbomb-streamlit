@@ -40,24 +40,20 @@ def plot_ranking_table(data: pd.DataFrame, actor: Optional[str] = None) -> go.Fi
 
     data = data[[
         "home_team", "away_team", "home_score", "away_score", "match_week", "competition_stage"
-    ]]
+    ]].copy()
 
-    # Conditions
-    home_win = data["home_score"] > data["away_score"]
-    draw = data["home_score"] == data["away_score"]
-    away_win = data["home_score"] < data["away_score"]
-
-    # Résultats pour home
-    data["home_result"] = np.select(
-        [home_win, draw, away_win],
-        ["W", "D", "L"]
-    )
-
-    # Résultats pour away
-    data["away_result"] = np.select(
-        [home_win, draw, away_win],
-        ["L", "D", "W"]
-    )
+    # 1) Make sure scores are numeric
+    data["home_score"] = pd.to_numeric(data["home_score"], errors="coerce")
+    data["away_score"] = pd.to_numeric(data["away_score"], errors="coerce")
+    
+    # 2) Boolean masks as NumPy arrays (NaN -> False)
+    home_win = (data["home_score"] > data["away_score"]).fillna(False).to_numpy()
+    draw     = (data["home_score"] == data["away_score"]).fillna(False).to_numpy()
+    away_win = (data["home_score"] < data["away_score"]).fillna(False).to_numpy()
+    
+    # 3) Use np.select with a default (e.g., empty string)
+    data["home_result"] = np.select([home_win, draw, away_win], ["W", "D", "L"], default="")
+    data["away_result"] = np.select([home_win, draw, away_win], ["L", "D", "W"], default="")
 
     # Stats à domicile
     ranking_home = (

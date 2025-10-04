@@ -9,7 +9,7 @@ clarity and maintainability.
 
 Run this app locally with:
 
-    streamlit run OneDrive/Desktop/app_statsbomb/app.py
+    streamlit run OneDrive/Desktop/statsbomb-streamlit/app_statsbomb/app.py
 
 Ensure that the dependencies listed in requirements.txt are
 installed in your environment. When deployed on Streamlit Cloud
